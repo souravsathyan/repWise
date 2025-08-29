@@ -15,6 +15,8 @@ import GoogleSignIn from "../components/GoogleSigngin";
 import PasswordField from "../components/formFields/PasswordField";
 import TextInputField from "../components/formFields/TextInputField";
 import { validateEmail, validatePassword } from "../utils/helpers";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { toast } from "sonner-native";
 
 export default function Page() {
   const { signIn, setActive, isLoaded } = useSignIn();
@@ -65,6 +67,11 @@ export default function Page() {
       // See https://clerk.com/docs/custom-flows/error-handling
       // for more info on error handling
       console.error(JSON.stringify(err, null, 2));
+      if (err?.errors?.length) {
+        err.errors.forEach((e: any) => toast.error(e.message));
+      } else {
+        toast.error("Something went wrong. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
@@ -88,9 +95,11 @@ export default function Page() {
 
   return (
     <SafeAreaView className="flex-1">
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        className="flex-1"
+      <KeyboardAwareScrollView
+        enableOnAndroid
+        enableAutomaticScroll
+        extraScrollHeight={20}
+        contentContainerStyle={{ flexGrow: 1 }}
       >
         {/* Header */}
         <View className="flex-1 justify-center p-4">
@@ -179,7 +188,7 @@ export default function Page() {
           </Text>
           <Ionicons name="heart" size={20} color="pink" />
         </View>
-      </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 }

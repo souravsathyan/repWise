@@ -15,11 +15,13 @@ import AuthLogo from "../components/AuthLogo";
 import TextInputField from "../components/formFields/TextInputField";
 import PasswordField from "../components/formFields/PasswordField";
 import VerificationScreen from "../components/VerificationScreen";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import {
   validateCode,
   validateEmail,
   validatePassword,
 } from "../utils/helpers";
+import { toast } from "sonner-native";
 
 export default function SignUp() {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -69,6 +71,11 @@ export default function SignUp() {
       // See https://clerk.com/docs/custom-flows/error-handling
       // for more info on error handling
       console.error(JSON.stringify(err, null, 2));
+      if (err?.errors?.length) {
+        err.errors.forEach((e: any) => toast.error(e.message));
+      } else {
+        toast.error("Something went wrong. Please try again.");
+      }
     }
   };
 
@@ -104,6 +111,11 @@ export default function SignUp() {
       // See https://clerk.com/docs/custom-flows/error-handling
       // for more info on error handling
       console.error(JSON.stringify(err, null, 2));
+      if (err?.errors?.length) {
+        err.errors.forEach((e: any) => toast.error(e.message));
+      } else {
+        toast.error("Something went wrong. Please try again.");
+      }
     }
   };
 
@@ -146,9 +158,11 @@ export default function SignUp() {
 
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        className="flex-1"
+      <KeyboardAwareScrollView
+        enableOnAndroid
+        enableAutomaticScroll
+        extraScrollHeight={20}
+        contentContainerStyle={{ flexGrow: 1 }}
       >
         <View className="flex-1">
           {/* Main */}
@@ -215,7 +229,7 @@ export default function SignUp() {
             </Link>
           </View>
         </View>
-      </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 }
