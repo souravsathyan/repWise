@@ -1,6 +1,7 @@
 import { Link } from "expo-router";
 import React from "react";
-import { SafeAreaView, Text, View } from "react-native";
+import { Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Page() {
   return (
@@ -26,7 +27,7 @@ function Content() {
 
             <Text className="mx-auto max-w-[700px] text-lg text-center md:text-xl">
               This template sets up Expo and Tailwind (NativeWind) allowing you
-              to quickly get started with my YouTube tutorial!
+              to quickly get started with my YouTube tutorial!123
             </Text>
             <Link href="https://www.youtube.com/@sonnysangha" target="_blank">
               <Text className="text-lg text-center text-blue-500 hover:text-blue-700 underline md:text-xl dark:text-blue-400 dark:hover:text-blue-300">
