@@ -20,7 +20,7 @@ import {
   validateCode,
   validateEmail,
   validatePassword,
-} from "../utils/helpers";
+} from "../../lib/helpers";
 import { toast } from "sonner-native";
 
 export default function SignUp() {

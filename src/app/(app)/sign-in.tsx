@@ -14,7 +14,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import GoogleSignIn from "../components/GoogleSigngin";
 import PasswordField from "../components/formFields/PasswordField";
 import TextInputField from "../components/formFields/TextInputField";
-import { validateEmail, validatePassword } from "../utils/helpers";
+import { validateEmail, validatePassword } from "../../lib/helpers";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { toast } from "sonner-native";
 
