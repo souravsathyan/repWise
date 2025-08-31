@@ -5,23 +5,24 @@ import SearchField from "@/app/components/SearchField";
 import { FlatList } from "react-native-gesture-handler";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { defineQuery } from "groq";
-import { client } from "@/lib/sanity/client";
-import { Exercise } from "@/lib/sanity/types";
+// import { client } from "@/lib/sanity/client";
+// import { Exercise } from "@/lib/sanity/types";
 
 const exercisesQuery = defineQuery(`*[_type=="exercise"]{...}`);
 
 const Exercises = () => {
   const [searchQuery, setSearchQuery] = React.useState("");
   const [refreshing, setRefresh] = React.useState(false);
-  const [exercises, setExercises] = React.useState<Exercise[]>([]);
+  const [exercises, setExercises] = React.useState([]);
+
   const [filteredExercises, setFilteredExercises] = React.useState([]);
 
   const fetchExercises = async () => {
     try {
-      const exercises = await client.fetch(exercisesQuery);
+      // const exercises = await client.fetch(exercisesQuery);
 
-      setExercises(exercises);
-      setFilteredExercises(exercises);
+      setExercises([]);
+      setFilteredExercises([]);
     } catch (e) {}
   };
 
