@@ -11,10 +11,10 @@ import { useSignUp } from "@clerk/clerk-expo";
 import { Link, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import AuthLogo from "../components/AuthLogo";
-import TextInputField from "../components/formFields/TextInputField";
-import PasswordField from "../components/formFields/PasswordField";
-import VerificationScreen from "../components/VerificationScreen";
+import AuthLogo from "../../components/AuthLogo";
+import TextInputField from "../../components/formFields/TextInputField";
+import PasswordField from "../../components/formFields/PasswordField";
+import VerificationScreen from "../../components/VerificationScreen";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import {
   validateCode,

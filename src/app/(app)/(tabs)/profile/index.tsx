@@ -1,4 +1,4 @@
-import BottomAlertModal from "@/app/components/BottomAlert";
+import BottomAlertModal from "@/components/BottomAlert";
 import { useAuth } from "@clerk/clerk-expo";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import React, { useState } from "react";

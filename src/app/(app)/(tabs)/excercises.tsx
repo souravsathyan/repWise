@@ -7,37 +7,25 @@ import {
 } from "react-native";
 import React, { useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import SearchField from "@/app/components/SearchField";
+import SearchField from "@/components/SearchField";
 import { FlatList } from "react-native-gesture-handler";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { getExercises } from "@/api/exercise";
+import { getExercises } from "@/app/api/exercise";
 import { Exercise } from "@/lib/strapi/exercise";
-import ExerciseList from "@/app/components/ExerciseList";
+import ExerciseList from "@/components/exercise/ExerciseList";
 import { useRouter } from "expo-router";
+import { useGetExercises } from "@/hooks/useExercies";
 // import { client } from "@/lib/sanity/client";
 // import { Exercise } from "@/lib/sanity/types";
 
 const Exercises = () => {
   const [searchQuery, setSearchQuery] = React.useState("");
   const [refreshing, setRefresh] = React.useState(false);
-  const [exercises, setExercises] = React.useState<Exercise[]>([]);
   const router = useRouter();
-
+  const { data: exercises, isLoading, refetch } = useGetExercises();
   const [filteredExercises, setFilteredExercises] = React.useState<Exercise[]>(
     []
   );
-
-  const fetchExercises = async () => {
-    try {
-      const data = await getExercises();
-      setExercises(data);
-      setFilteredExercises([]);
-    } catch (e) {}
-  };
-
-  useEffect(() => {
-    fetchExercises();
-  }, []);
 
   useEffect(() => {
     if (exercises) {
@@ -50,7 +38,7 @@ const Exercises = () => {
 
   const onRefresh = async () => {
     setRefresh(true);
-    await fetchExercises();
+    await refetch();
     setRefresh(false);
   };
   return (
@@ -95,12 +83,18 @@ const Exercises = () => {
           <View className="bg-white rounded-2xl p-8 items-center">
             <Ionicons name="fitness-outline" size={64} color="#9CA3AF" />
             <Text className="text-xl font-semibold text-gray-900 mt-4">
-              {searchQuery ? "No exercises found" : "Loading exercises..."}
+              {searchQuery
+                ? "No exercises found"
+                : isLoading
+                ? "Loading exercises..."
+                : "No exercise found"}
             </Text>
             <Text className="text-gray-600 text-center mt-2">
               {searchQuery
                 ? "Try adjusting your search"
-                : "Your exercises will appear here"}
+                : isLoading
+                ? "Your exercises will appear here"
+                : "No exercise found"}
             </Text>
           </View>
         }
