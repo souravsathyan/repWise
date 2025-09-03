@@ -5,7 +5,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 
 const SetsTile = ({ set, index }: { set: WorkoutSets; index: number }) => {
   return (
-    <View className="bg-gray-50 rounded-lg p-3 flex-row items-center justify-between">
+    <View className="bg-gray-50 rounded-lg p-3 flex-row items-center justify-between mb-2">
       {/* reps */}
       <View className="flex-row items-center">
         <View className="bg-gray-200 rounded-full w-6 h-6 items-center justify-center mr-3">

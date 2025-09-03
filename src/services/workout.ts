@@ -28,15 +28,11 @@ export const getWorkoutHistory = async (
   }
 };
 
-export const deleteWorkoutHistory = async ({
-  workoutId,
-}: {
-  workoutId: string;
-}) => {
+export const deleteWorkoutHistory = async (documentId: string) => {
   try {
     console.log("CALLING DEL API");
     const deleteResponse = await axiosInstance.delete(
-      `/api/workouts/${workoutId}`
+      `/api/workouts/${documentId}`
     );
     console.log({ deleteResponse });
     return deleteResponse.status === 204 ? deleteResponse.data : null;

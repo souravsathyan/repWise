@@ -32,9 +32,7 @@ const WorkoutRecord = () => {
     workoutId as string,
     userId
   );
-  const { mutate, isPending: deleting } = useDeleteWorkoutHistory(
-    workoutId as string
-  );
+  const { mutateAsync, isPending: deleting } = useDeleteWorkoutHistory(userId);
 
   const handleOpenModal = () => {
     setOpen(true);
@@ -59,9 +57,10 @@ const WorkoutRecord = () => {
   };
 
   const onConfirm = async () => {
-    await mutate();
-    // router.replace("/(app)/(tab)/history?refresh=true");
-    router.back();
+    if (workout) {
+      await mutateAsync(workout?.documentId);
+      router.back();
+    }
   };
 
   if (loading) {

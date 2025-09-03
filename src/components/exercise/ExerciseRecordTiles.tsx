@@ -1,7 +1,5 @@
 import { View, Text } from "react-native";
 import React from "react";
-import { Exercise } from "@/lib/strapi/exercise";
-import { Workout } from "@/lib/strapi/workout";
 import { WorkoutExcercise } from "@/lib/strapi/workoutExcercise";
 import SetsTile from "./SetsTile";
 import { WorkoutSets } from "@/lib/strapi/workoutSets";

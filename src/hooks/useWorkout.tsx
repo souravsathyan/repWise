@@ -25,13 +25,18 @@ export const useGetWorkoutHistory = (workoutId: string, userId: string) => {
   });
 };
 
-export const useDeleteWorkoutHistory = (workoutId: string) => {
+export const useDeleteWorkoutHistory = (userId: string) => {
   const queryClient = useQueryClient();
-  return useMutation<Workout | null, Error>({
-    mutationFn: () => deleteWorkoutHistory({ workoutId }),
-    onSuccess: () => {
-      // invalidate the workout history list
-      queryClient.invalidateQueries({ queryKey: ["workout-histories"] });
+  return useMutation<Workout | null, Error, string>({
+    mutationFn: (documentId: string) => deleteWorkoutHistory(documentId),
+    onSuccess: (_, documentId) => {
+      queryClient.setQueryData<Workout[]>(
+        ["workout-histories", userId],
+        (old) => (old ? old.filter((w) => w.documentId !== documentId) : [])
+      );
+      queryClient.invalidateQueries({
+        queryKey: ["workout-histories", userId],
+      });
       toast.success("Workout History Deleted successfully");
     },
     onError: () => {
