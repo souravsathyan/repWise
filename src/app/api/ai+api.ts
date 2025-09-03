@@ -33,8 +33,6 @@ Always use headings and subheadings.`;
       model: "gemini-2.0-flash",
       messages: [{ role: "user", content: prompt }],
     });
-
-    console.log("called");
     return Response.json({ message: response.choices[0].message.content });
   } catch (error) {
     console.error("Error fetching Al guidance:", error);

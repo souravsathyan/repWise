@@ -10,7 +10,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import SearchField from "@/components/SearchField";
 import { FlatList } from "react-native-gesture-handler";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { getExercises } from "@/app/api/exercise";
 import { Exercise } from "@/lib/strapi/exercise";
 import ExerciseList from "@/components/exercise/ExerciseList";
 import { useRouter } from "expo-router";

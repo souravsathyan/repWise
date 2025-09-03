@@ -33,7 +33,6 @@ const ExerciseDetails = ({ item }) => {
 
   const handleAi = async () => {
     if (!exercise) return;
-    console.log("handling the ai request");
     getAiAssistance({ exerciseName: exercise.name });
   };
 

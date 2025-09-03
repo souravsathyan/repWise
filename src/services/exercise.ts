@@ -1,5 +1,5 @@
+import axiosInstance from "@/lib/axiosInstance";
 import { Exercise } from "@/lib/strapi/exercise";
-import axiosInstance from "./axiosInstance";
 
 export const getExercises = async (): Promise<Exercise[] | null> => {
   try {

@@ -1,6 +1,6 @@
-import { getExercise, getExercises } from "@/app/api/exercise";
+import { getExercise, getExercises } from "@/services/exercise";
 import { Exercise } from "@/lib/strapi/exercise";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 export const useGetExercises = () => {
   return useQuery<Exercise[], Error>({
