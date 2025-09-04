@@ -62,7 +62,7 @@ export default function HistoryScreen() {
           Workout History
         </Text>
         <Text className="text-gray-600 mt-1">
-          {workouts.length} workout{workouts.length > 1 ? "s" : ""} completed
+          {workouts?.length} workout{workouts?.length > 1 ? "s" : ""} completed
         </Text>
       </View>
 

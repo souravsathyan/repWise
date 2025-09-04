@@ -27,6 +27,15 @@ const Layout = () => {
             animationTypeForReplace: "pop",
           }}
         />
+        <Stack.Screen
+          name="active-workout"
+          options={{
+            headerShown: false,
+            presentation: "modal",
+            gestureEnabled: true,
+            animationTypeForReplace: "pop",
+          }}
+        />
       </Stack.Protected>
       <Stack.Protected guard={!isSignedIn}>
         <Stack.Screen name="sign-in" options={{ headerShown: false }} />

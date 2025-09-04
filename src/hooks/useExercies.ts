@@ -11,7 +11,7 @@ export const useGetExercises = () => {
 };
 
 export const useGetExercise = (id: string) => {
-  return useQuery<Exercise | null, Error>({
+  return useQuery<Exercise | [], Error>({
     queryKey: ["exercise", id],
     queryFn: () => getExercise(id),
     enabled: !!id,

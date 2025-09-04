@@ -13,9 +13,11 @@
           "origin": "https://n"
         }
       ],
-      "expo-secure-store"
+      "expo-secure-store",
+      "expo-web-browser",
+      "expo-font"
     ],
-    "name": "fit-app",
-    "slug": "fit-app"
+    "name": "RepWise",
+    "slug": "rep-wise"
   }
 }
