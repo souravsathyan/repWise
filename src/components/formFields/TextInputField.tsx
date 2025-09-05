@@ -20,6 +20,7 @@ interface Props {
   hideIcon: boolean;
   showWeight?: boolean;
   weightUnit?: string;
+  inputPadding?: string;
 }
 
 const TextInputField = ({
@@ -33,6 +34,7 @@ const TextInputField = ({
   hideIcon,
   showWeight,
   weightUnit,
+  inputPadding = "px-4 py-4",
 }: Props) => {
   const borderColor = error ? "border-red-500" : "border-gray-200";
   const labelColor = error ? "text-red-500" : "text-gray-700";
@@ -42,7 +44,7 @@ const TextInputField = ({
     <View className="mb-4">
       <Text className={`text-sm font-medium mb-2 ${labelColor}`}>{label}</Text>
       <View
-        className={`flex-row items-center bg-gray-50 rounded-xl px-4 py-4 border ${borderColor}`}
+        className={`flex-row items-center bg-gray-50 rounded-xl  border ${borderColor} ${inputPadding}`}
       >
         {!hideIcon && (
           <Ionicons
@@ -58,7 +60,7 @@ const TextInputField = ({
           placeholderTextColor={error ? "#FCA5A5" : "#9CA3AF"} // lighter red if error
           onChangeText={onChangeText}
           className={`flex-1 ml-3 ${inputTextColor}`}
-          editable={!isLoading}
+          editable={isLoading}
           keyboardType={keyboardType || "default"}
         />
         {showWeight && (

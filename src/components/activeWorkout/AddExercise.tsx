@@ -21,7 +21,6 @@ const AddExercise = ({ workoutExercises }: Props) => {
     setShowExerciseSelection(true);
   };
 
-  const deleteExercise = () => {};
   const addNewSet = (exId: number) => {
     const newWorkoutSet: WorkoutSet = {
       reps: "",
@@ -59,6 +58,42 @@ const AddExercise = ({ workoutExercises }: Props) => {
     );
   };
 
+  const toggleSetCompletion = (exerciseId: number, setId: string) => {
+    setWorkoutExercises((exercises) =>
+      exercises.map((exercise) =>
+        exercise.id === exerciseId
+          ? {
+              ...exercise,
+              sets: exercise.sets.map((set) =>
+                set.id === setId
+                  ? { ...set, isCompleted: !set.isCompleted }
+                  : set
+              ),
+            }
+          : exercise
+      )
+    );
+  };
+
+  const deleteSet = (exerciseId: number, setId: string) => {
+    setWorkoutExercises((exercises) =>
+      exercises.map((exercise) =>
+        exercise.id === exerciseId
+          ? {
+              ...exercise,
+              sets: exercise.sets.filter((set) => set.id !== setId),
+            }
+          : exercise
+      )
+    );
+  };
+
+  const deleteExercise = (exerciseId: number) => {
+    setWorkoutExercises((exercises) =>
+      exercises.filter((exercise) => exercise.id !== exerciseId)
+    );
+  };
+
   return (
     <KeyboardAwareScrollView
       enableOnAndroid
@@ -66,7 +101,7 @@ const AddExercise = ({ workoutExercises }: Props) => {
       extraScrollHeight={20}
       contentContainerStyle={{ flexGrow: 1, padding: 12 }}
     >
-      <View className="flex-1 px-6 mt-4">
+      <View className="flex-1 px-2 mt-4">
         {workoutExercises.map((exercise) => (
           <View key={exercise.id} className="mb-8">
             <TouchableOpacity
@@ -92,7 +127,7 @@ const AddExercise = ({ workoutExercises }: Props) => {
                   </Text>
                 </View>
                 <TouchableOpacity
-                  onPress={() => deleteExercise()}
+                  onPress={() => deleteExercise(exercise.id)}
                   className="w-10 h-10 rounded-xl items-center justify-center bg-red-500 ml-3"
                 >
                   <Ionicons name="trash" size={16} color="white" />
@@ -128,11 +163,12 @@ const AddExercise = ({ workoutExercises }: Props) => {
                           onChangeText={(value) =>
                             updateSet(exercise.id, set.id, "reps", value)
                           }
-                          isLoading={!set.isCompleted}
+                          isLoading={!set.isCompleted ? true : false}
                           keyboardType="numeric"
                           placeholder="0"
                           label="Reps"
                           hideIcon
+                          inputPadding="px-0 py-0"
                         />
                       </View>
                       <View className="flex-1 mx-2">
@@ -141,15 +177,36 @@ const AddExercise = ({ workoutExercises }: Props) => {
                           onChangeText={(value) =>
                             updateSet(exercise.id, set.id, "weight", value)
                           }
-                          isLoading={!set.isCompleted}
+                          isLoading={!set.isCompleted ? true : false}
                           keyboardType="numeric"
                           placeholder="0"
                           label="Weight"
                           hideIcon
                           showWeight={true}
                           weightUnit={weightUnit}
+                          inputPadding="px-0 py-0"
                         />
                       </View>
+                      <TouchableOpacity
+                        onPress={() => toggleSetCompletion(exercise.id, set.id)}
+                        className={`w-12 h-12 rounded-xl items-center justify-center mx-1 mt-3 ${
+                          set.isCompleted ? "bg-green-500" : "bg-gray-200"
+                        }`}
+                      >
+                        <Ionicons
+                          name={
+                            set.isCompleted ? "checkmark" : "checkmark-outline"
+                          }
+                          size={20}
+                          color={set.isCompleted ? "white" : "#9CA3AF"}
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={() => deleteSet(exercise.id, set.id)}
+                        className="w-12 h-12 rounded-xl items-center justify-center bg-red-500 ml-1 mt-3"
+                      >
+                        <Ionicons name="trash" size={16} color="white" />
+                      </TouchableOpacity>
                     </View>
                   </View>
                 ))
