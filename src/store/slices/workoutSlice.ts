@@ -7,12 +7,12 @@ export interface WorkoutSet {
   reps: string;
   weight: string;
   weightUnit: "kg" | "lbs";
-  isCOmpleted: boolean;
+  isCompleted: boolean;
 }
 
-interface workoutExercise {
-  id: string;
-  documentId: string;
+export interface workoutExercise {
+  uid: string;
+  id: number;
   name: string;
   sets: WorkoutSet[];
 }
@@ -20,10 +20,7 @@ interface workoutExercise {
 export interface WorkoutSlice {
   workoutExercises: workoutExercise[];
   weightUnit: "kg" | "lbs";
-  addExerciseToWorkout: (exercise: {
-    name: string;
-    documentId: string;
-  }) => void;
+  addExerciseToWorkout: (exercise: { name: string; id: number }) => void;
   setWorkoutExercises: (
     exercises:
       | workoutExercise[]
@@ -39,8 +36,8 @@ export const createWorkoutSlice: StateCreator<WorkoutSlice> = (set) => ({
   addExerciseToWorkout: (exercise) =>
     set((state) => {
       const newExercise: workoutExercise = {
-        id: Math.random().toString(),
-        documentId: exercise.documentId,
+        uid: Math.random().toString(),
+        id: exercise.id,
         name: exercise.name,
         sets: [],
       };

@@ -19,8 +19,8 @@ import { useGetExercises } from "@/hooks/useExercies";
 
 const Exercises = () => {
   const [searchQuery, setSearchQuery] = React.useState("");
-  const [refreshing, setRefresh] = React.useState(false);
   const router = useRouter();
+  const [refreshing, setRefresh] = React.useState(false);
   const { data: exercises, isLoading, refetch } = useGetExercises();
   const [filteredExercises, setFilteredExercises] = React.useState<Exercise[]>(
     []

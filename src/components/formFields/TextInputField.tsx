@@ -1,14 +1,25 @@
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  KeyboardTypeOptions,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import React, { Dispatch, SetStateAction } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 interface Props {
-  onChangeText: Dispatch<SetStateAction<string>>;
+  onChangeText: (text: string) => void;
   isLoading: boolean;
   value: string;
   placeholder: string;
   label: string;
-  error: string;
+  error?: string;
+  keyboardType: KeyboardTypeOptions;
+  hideIcon: boolean;
+  showWeight?: boolean;
+  weightUnit?: string;
 }
 
 const TextInputField = ({
@@ -18,6 +29,10 @@ const TextInputField = ({
   label,
   placeholder,
   error,
+  keyboardType,
+  hideIcon,
+  showWeight,
+  weightUnit,
 }: Props) => {
   const borderColor = error ? "border-red-500" : "border-gray-200";
   const labelColor = error ? "text-red-500" : "text-gray-700";
@@ -29,11 +44,13 @@ const TextInputField = ({
       <View
         className={`flex-row items-center bg-gray-50 rounded-xl px-4 py-4 border ${borderColor}`}
       >
-        <Ionicons
-          name="mail-outline"
-          size={20}
-          color={error ? "#EF4444" : "#687280"} // red if error
-        />
+        {!hideIcon && (
+          <Ionicons
+            name="mail-outline"
+            size={20}
+            color={error ? "#EF4444" : "#687280"} // red if error
+          />
+        )}
         <TextInput
           autoCapitalize="none"
           value={value}
@@ -42,7 +59,15 @@ const TextInputField = ({
           onChangeText={onChangeText}
           className={`flex-1 ml-3 ${inputTextColor}`}
           editable={!isLoading}
+          keyboardType={keyboardType || "default"}
         />
+        {showWeight && (
+          <MaterialCommunityIcons
+            name={weightUnit === "kg" ? "weight-gram" : "weight-pound"}
+            size={24}
+            color={"#687280"}
+          />
+        )}
       </View>
       {error && <Text className="text-red-500 text-sm mt-1">{error}</Text>}
     </View>
