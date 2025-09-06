@@ -21,3 +21,15 @@ export const getExercise = async (id: string): Promise<Exercise | []> => {
     console.log(error);
   }
 };
+export const getExerciseByName = async (
+  name: string
+): Promise<Exercise | []> => {
+  try {
+    const response = await axiosInstance.get(`/api/exercises/?populate=image`, {
+      params: { name },
+    });
+    return response.status === 200 ? response?.data?.data[0] : [];
+  } catch (error) {
+    console.log(error);
+  }
+};

@@ -1,8 +1,8 @@
-import { Exercise } from './exercise';
-import { WorkoutSets } from './workoutSets';
+import { Exercise } from "./exercise";
+import { WorkoutSets } from "./workoutSets";
 
 export interface WorkoutExcercise {
   id?: number;
-  exercise?: Exercise | null;
+  exercise?: number | Exercise | null;
   sets?: WorkoutSets[] | null;
-};
+}

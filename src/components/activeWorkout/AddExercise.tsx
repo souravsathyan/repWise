@@ -1,4 +1,10 @@
-import { View, Text, TouchableOpacity, TextInput } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ActivityIndicator,
+  Alert,
+} from "react-native";
 import React, { useState } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useAppStore } from "@/store/store";
@@ -7,15 +13,28 @@ import { workoutExercise, WorkoutSet } from "@/store/slices/workoutSlice";
 import ExerciseSelectionModal from "./ExerciseSelectionModal";
 import { useRouter } from "expo-router";
 import TextInputField from "../formFields/TextInputField";
+import { useGetExerciseByName } from "@/hooks/useExercies";
+import { useAuth } from "@clerk/clerk-expo";
+import { Workout } from "@/lib/strapi/workout";
+import { WorkoutSets } from "@/lib/strapi/workoutSets";
+import { useCreateWorkout } from "@/hooks/useWorkout";
+import { toast } from "sonner-native";
+import BottomAlertModal from "../BottomAlert";
 
 interface Props {
   workoutExercises: workoutExercise[];
+  totalSeconds: number;
 }
 
-const AddExercise = ({ workoutExercises }: Props) => {
+const AddExercise = ({ workoutExercises, totalSeconds }: Props) => {
   const [showWxerciseSelection, setShowExerciseSelection] = useState(false);
+  const [openConfirmModal, setOpenConfirmModal] = useState(false);
   const router = useRouter();
-  const { setWorkoutExercises, weightUnit } = useAppStore();
+  const { setWorkoutExercises, weightUnit, restWorkout } = useAppStore();
+  const { mutateAsync: findExerciseByName } = useGetExerciseByName();
+  const { userId } = useAuth();
+  const { mutateAsync: createWorkout, isPending: isSaving } =
+    useCreateWorkout(userId);
 
   const addExercise = () => {
     setShowExerciseSelection(true);
@@ -92,6 +111,87 @@ const AddExercise = ({ workoutExercises }: Props) => {
     setWorkoutExercises((exercises) =>
       exercises.filter((exercise) => exercise.id !== exerciseId)
     );
+  };
+
+  const saveWorkoutToDatabase = async (): Promise<boolean> => {
+    if (isSaving) return false;
+
+    try {
+      const durationInSeconds = totalSeconds;
+
+      const exerciseForStrapi = await Promise.all(
+        workoutExercises.map(async (exercise) => {
+          const exerciseDoc = await findExerciseByName(exercise.name);
+          if (!exerciseDoc || Array.isArray(exerciseDoc)) {
+            throw new Error(`${exercise.name} not found. Please Try Again`);
+          }
+
+          const setsForStrapi = exercise.sets
+            .filter((set) => set.isCompleted && set.reps && set.weight)
+            .map((set) => ({
+              reps: parseInt(set.reps, 10) || 0,
+              weight: parseFloat(set.weight) || 0,
+              weightUnit: set.weightUnit as "kg" | "lb",
+            }));
+
+          return {
+            exercise: exerciseDoc.id, // relation
+            sets: setsForStrapi,
+          };
+        })
+      );
+
+      // Keep only exercises with sets
+      const validExercises = exerciseForStrapi.filter(
+        (exercise) => exercise.sets.length > 0
+      );
+
+      if (validExercises.length === 0) {
+        toast.error(
+          "No Completed Sets\nPlease complete at least one set before saving the workout."
+        );
+        return false;
+      }
+
+      const workoutData: Workout = {
+        userId: userId,
+        date: new Date().toISOString(),
+        duration: durationInSeconds,
+        exercises: validExercises,
+      };
+
+      await createWorkout(workoutData);
+
+      return true;
+    } catch (error) {
+      console.error("Error saving workout:", error);
+      return false;
+    }
+  };
+
+  const endWorkout = async () => {
+    const saved = await saveWorkoutToDatabase();
+    if (saved) {
+      toast.success(
+        "Workout Saved \nYour workout has been saved successfully!"
+      );
+      // Reset the workout
+      restWorkout();
+      router.replace("/history");
+    }
+  };
+
+  const saveWorkout = () => {
+    setOpenConfirmModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenConfirmModal(false);
+  };
+
+  const onConfirm = async () => {
+    await endWorkout();
+    setOpenConfirmModal(false);
   };
 
   return (
@@ -245,9 +345,51 @@ const AddExercise = ({ workoutExercises }: Props) => {
           <Text className="text-white font-semibold text-lg">Add Exercise</Text>
         </View>
       </TouchableOpacity>
+      <TouchableOpacity
+        onPress={saveWorkout}
+        className={`rounded-2xl py-4 items-center mb-8 ${
+          isSaving ||
+          workoutExercises.length === 0 ||
+          workoutExercises.some((exercise) =>
+            exercise.sets.some((set) => !set.isCompleted)
+          )
+            ? "bg-gray-400"
+            : "bg-green-600 active:bg-green-700"
+        }`}
+        disabled={
+          isSaving ||
+          workoutExercises.length === 0 ||
+          workoutExercises.some((exercise) =>
+            exercise.sets.some((set) => !set.isCompleted)
+          )
+        }
+      >
+        {isSaving ? (
+          <View className="flex-row items-center">
+            <ActivityIndicator size="small" color="white" />
+            <Text className="text-white font-semibold text-lg ml-2">
+              Saving...
+            </Text>
+          </View>
+        ) : (
+          <Text className="text-white font-semibold text-lg">
+            Complete Workout
+          </Text>
+        )}
+      </TouchableOpacity>
+
       <ExerciseSelectionModal
         visible={showWxerciseSelection}
         onClose={() => setShowExerciseSelection(false)}
+      />
+      <BottomAlertModal
+        message="Are you sure you want to complete the workout?"
+        title="Complete Workout"
+        visible={openConfirmModal}
+        onClose={handleCloseModal}
+        onConfirm={onConfirm}
+        btnText="Complete Workout"
+        isLoading={isSaving}
       />
     </KeyboardAwareScrollView>
   );

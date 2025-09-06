@@ -1,6 +1,7 @@
 import { Workout } from "@/lib/strapi/workout";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  createWorkout,
   deleteWorkoutHistory,
   getWorkoutHistories,
   getWorkoutHistory,
@@ -41,6 +42,21 @@ export const useDeleteWorkoutHistory = (userId: string) => {
     },
     onError: () => {
       toast.error("Failed to Delete Workout History");
+    },
+  });
+};
+export const useCreateWorkout = (userId: string) => {
+  const queryClient = useQueryClient();
+  return useMutation<Workout | null, Error, Workout>({
+    mutationFn: (data: Workout) => createWorkout(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["workout-histories", userId],
+      });
+    },
+    onError: () => {
+      toast.error("Failed to Delete Workout History");
+      throw new Error("Failed to create workout");
     },
   });
 };

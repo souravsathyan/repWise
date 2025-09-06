@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import Modal from "react-native-modal";
 
 interface BottomAlertModalProps {
@@ -9,6 +9,7 @@ interface BottomAlertModalProps {
   message: string;
   onClose: () => void;
   onConfirm?: () => void;
+  isLoading?: boolean;
 }
 
 const BottomAlertModal: React.FC<BottomAlertModalProps> = ({
@@ -18,6 +19,7 @@ const BottomAlertModal: React.FC<BottomAlertModalProps> = ({
   onClose,
   onConfirm,
   btnText,
+  isLoading,
 }) => {
   return (
     <Modal
@@ -49,7 +51,16 @@ const BottomAlertModal: React.FC<BottomAlertModalProps> = ({
               onPress={onConfirm}
               className="px-4 py-2 bg-blue-600 rounded-xl"
             >
-              <Text className="text-white font-semibold">{btnText}</Text>
+              {isLoading ? (
+                <View className="flex-row items-center">
+                  <ActivityIndicator size="small" color="white" />
+                  <Text className="text-white font-semibold text-lg ml-2">
+                    Saving...
+                  </Text>
+                </View>
+              ) : (
+                <Text className="text-white font-semibold">{btnText}</Text>
+              )}
             </TouchableOpacity>
           )}
         </View>

@@ -49,7 +49,7 @@ export const getText = (field: any) => {
   return "";
 };
 
-export const formatDate = (dateString: string) => {
+export const formatDate = (dateString: string | Date) => {
   const date = new Date(dateString);
   const today = new Date();
   const yesterday = new Date(today);

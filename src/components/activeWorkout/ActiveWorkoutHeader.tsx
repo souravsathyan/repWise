@@ -6,10 +6,15 @@ import { useFocusEffect } from "expo-router";
 
 const ActiveWorkoutHeader = ({
   handleOpenModal,
+  reset,
+  minutes,
+  seconds,
 }: {
   handleOpenModal: () => void;
+  reset: (offset?: Date, newAutoStart?: boolean) => void;
+  minutes: number;
+  seconds: number;
 }) => {
-  const { minutes, seconds, reset } = useStopwatch({ autoStart: true });
   const { setWeightUnit, weightUnit, workoutExercises } = useAppStore();
 
   const getWorkoutDuration = () => {

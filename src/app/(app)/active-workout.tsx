@@ -12,11 +12,14 @@ import { useRouter } from "expo-router";
 import ActiveWorkoutHeader from "@/components/activeWorkout/ActiveWorkoutHeader";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import AddExercise from "@/components/activeWorkout/AddExercise";
-import ExerciseSelectionModal from "@/components/activeWorkout/ExerciseSelectionModal";
+import { useStopwatch } from "react-timer-hook";
 
 const ActiveWorkout = () => {
   const { restWorkout, workoutExercises } = useAppStore();
   const [open, setOpen] = useState(false);
+  const { minutes, seconds, reset, totalSeconds } = useStopwatch({
+    autoStart: true,
+  });
   const router = useRouter();
 
   const handleOpenModal = () => {
@@ -39,7 +42,12 @@ const ActiveWorkout = () => {
           paddingTop: Platform.OS === "ios" ? 55 : StatusBar.currentHeight || 0,
         }}
       />
-      <ActiveWorkoutHeader handleOpenModal={handleOpenModal} />
+      <ActiveWorkoutHeader
+        handleOpenModal={handleOpenModal}
+        minutes={minutes}
+        seconds={seconds}
+        reset={reset}
+      />
       <View className="flex-1 bg-white">
         <View className="px-6 mt-4">
           <Text className="text-center text-gray-600 mb-2">
@@ -58,7 +66,10 @@ const ActiveWorkout = () => {
             </Text>
           </View>
         )}
-        <AddExercise workoutExercises={workoutExercises} />
+        <AddExercise
+          workoutExercises={workoutExercises}
+          totalSeconds={totalSeconds}
+        />
       </View>
       <BottomAlertModal
         message="Do you want to end this workout?"
